@@ -5,8 +5,18 @@ import EventView from "./pages/EventView";
 import EventForm from "./pages/EventForm";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { useAuthStore } from './store/authUser';
+import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
 function App() {
+  const { user, isCheckingAuth, authCheck } = useAuthStore();
+  console.log('user is here',user)
+
+  useEffect(() => {
+		authCheck();
+	}, [authCheck]);
+
   return (
     <Router>
       <Routes>
@@ -16,7 +26,9 @@ function App() {
         <Route path="/view" element={<EventView />} />
         <Route path="/form" element={<EventForm />} />
       </Routes>
+      <Toaster />
     </Router>
+    
   );
 }
 

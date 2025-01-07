@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/authUser";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const { login, isLoggingIn } = useAuthStore();
+  const { login, isLoggingIn } = useAuthStore();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    //const success = await login({ email, password })
-    // console.log("Login success:", success)
+    const success = await login({ email, password })
+    console.log("Login success:", success)
   };
 
   return (
@@ -55,9 +56,9 @@ const Login = () => {
         <button
           type="submit"
           className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
-        //   disabled={isLoggingIn}
+           disabled={isLoggingIn}
         >
-          {/* {isLoggingIn ? "Loading..." : "Login"} */}Login
+          {isLoggingIn ? "Loading..." : "Login"}
         </button>
         <div className="text-center text-gray-400">
           Don't have an account?{" "}
