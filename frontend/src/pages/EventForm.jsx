@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
 
-const RecipeForm = ({ onSubmit, initialData }) => {
+const EventForm = ({ onSubmit, initialData }) => {
   const [recipe, setRecipe] = useState(
     initialData || {
       name: "",
@@ -50,28 +50,42 @@ const RecipeForm = ({ onSubmit, initialData }) => {
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
             <form onSubmit={handleSubmit} className="space-y-6">
               <h2 className="text-2xl font-bold text-gray-800">
-                {initialData ? "Edit Recipe" : "Add New Recipe"}
+                {initialData ? "Edit Recipe" : "Create Event"}
               </h2>
               <div className="flex flex-col">
                 <label htmlFor="name" className="text-sm font-medium text-gray-600">
-                  Recipe Name
+                Title
                 </label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  placeholder="Enter recipe name"
+                  placeholder="Enter event title"
                   value={recipe.name}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
                 />
               </div>
               <div className="flex flex-col">
+                <label htmlFor="instructions" className="text-sm font-medium text-gray-600">
+                Description
+                </label>
+                <textarea
+                  id="instructions"
+                  name="instructions"
+                  placeholder="Enter Event Description"
+                  value={recipe.instructions}
+                  onChange={handleChange}
+                  className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
+                  rows="4"
+                ></textarea>
+              </div>
+              <div className="flex flex-col">
                 <label htmlFor="cuisine" className="text-sm font-medium text-gray-600">
-                  Cuisine
+                  Date
                 </label>
                 <input
-                  type="text"
+                  type="date"
                   id="cuisine"
                   name="cuisine"
                   placeholder="Enter cuisine type"
@@ -82,41 +96,42 @@ const RecipeForm = ({ onSubmit, initialData }) => {
               </div>
               <div className="flex flex-col">
                 <label htmlFor="ingredients" className="text-sm font-medium text-gray-600">
-                  Ingredients
+                Location
                 </label>
                 <input
                   type="text"
                   id="ingredients"
                   name="ingredients"
-                  placeholder="Comma-separated ingredients"
+                  placeholder="Enter Location"
                   value={recipe.ingredients}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="instructions" className="text-sm font-medium text-gray-600">
-                  Instructions
-                </label>
-                <textarea
-                  id="instructions"
-                  name="instructions"
-                  placeholder="Enter cooking instructions"
-                  value={recipe.instructions}
-                  onChange={handleChange}
-                  className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
-                  rows="4"
-                ></textarea>
-              </div>
-              <div className="flex flex-col">
                 <label htmlFor="cookingTime" className="text-sm font-medium text-gray-600">
-                  Cooking Time (in minutes)
+                Max attendees
                 </label>
                 <input
                   type="text"
                   id="cookingTime"
                   name="cookingTime"
-                  placeholder="Enter cooking time"
+                  placeholder="Enter max attendees"
+                  value={recipe.cookingTime}
+                  onChange={handleChange}
+                  className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="cookingTime" className="text-sm font-medium text-gray-600">
+                Image URL
+                </label>
+                <input
+                  type="text"
+                  id="cookingTime"
+                  name="cookingTime"
+                  placeholder="Enter image url"
                   value={recipe.cookingTime}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
@@ -126,7 +141,7 @@ const RecipeForm = ({ onSubmit, initialData }) => {
                 type="submit"
                 className="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-600 transition-all"
               >
-                {initialData ? "Update Recipe" : "Add Recipe"}
+                {initialData ? "Update Recipe" : "Create Event"}
               </button>
             </form>
           </div>
@@ -143,4 +158,4 @@ const RecipeForm = ({ onSubmit, initialData }) => {
   );
 };
 
-export default RecipeForm;
+export default EventForm;

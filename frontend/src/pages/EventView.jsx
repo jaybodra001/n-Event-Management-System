@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 
-const recipeData = [
+const eventData = [
   {
     id: 1,
     name: "Spaghetti Carbonara",
@@ -31,38 +31,38 @@ const recipeData = [
   },
 ];
 
-const RecipeView = () => {
+const EventView = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRecipes, setFilteredRecipes] = useState(recipeData);
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [filteredEvents, setFilteredEvents] = useState(eventData);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Handle search input change
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
 
-    const filtered = recipeData.filter(
-      (recipe) =>
-        recipe.name.toLowerCase().includes(term) ||
-        recipe.cuisine.toLowerCase().includes(term) ||
-        recipe.ingredients.some((ingredient) =>
+    const filtered = eventData.filter(
+      (event) =>
+        event.name.toLowerCase().includes(term) ||
+        event.cuisine.toLowerCase().includes(term) ||
+        event.ingredients.some((ingredient) =>
           ingredient.toLowerCase().includes(term)
         )
     );
 
-    setFilteredRecipes(filtered);
+    setFilteredEvents(filtered);
   };
 
-  // Handle selecting a recipe
-  const handleSelectRecipe = (recipe) => {
-    setSelectedRecipe(recipe);
+  // Handle selecting a Event
+  const handleSelectEvent = (event) => {
+    setSelectedEvent(event);
   };
 
-  // Handle deleting a recipe
-  const handleDeleteRecipe = (id) => {
-    const updatedRecipes = filteredRecipes.filter((recipe) => recipe.id !== id);
-    setFilteredRecipes(updatedRecipes);
-    setSelectedRecipe(null);
+  // Handle deleting a Event
+  const handleDeleteEvent = (id) => {
+    const updatedEvents = filteredEvents.filter((event) => event.id !== id);
+    setFilteredEvents(updatedEvents);
+    setSelectedEvent(null);
   };
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -79,7 +79,7 @@ const RecipeView = () => {
         <main className="flex-1 p-6 overflow-y-auto">
           <div className="bg-white p-6 rounded shadow animate-fade-in">
             <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-            <h2 className="text-2xl font-bold text-gray-800">Recipes</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Events</h2>
 
               {/* Search Bar */}
               <input
@@ -96,12 +96,12 @@ const RecipeView = () => {
                 }}
               />
 
-              {/* Recipe List */}
-              {!selectedRecipe && (
+              {/* Event List */}
+              {!selectedEvent && (
                 <ul style={{ listStyle: "none", padding: 0 }}>
-                  {filteredRecipes.map((recipe) => (
+                  {filteredEvents.map((event) => (
                     <li
-                      key={recipe.id}
+                      key={event.id}
                       style={{
                         border: "1px solid #ddd",
                         borderRadius: "5px",
@@ -109,16 +109,16 @@ const RecipeView = () => {
                         padding: "15px",
                       }}
                     >
-                      <h2>{recipe.name}</h2>
+                      <h2>{event.name}</h2>
                       <p>
-                        <strong>Cuisine:</strong> {recipe.cuisine}
+                        <strong>Date:</strong> {event.cuisine}
                       </p>
                       <p>
                         <strong>Ingredients:</strong>{" "}
-                        {recipe.ingredients.join(", ")}
+                        {event.ingredients.join(", ")}
                       </p>
                       <button
-                        onClick={() => handleSelectRecipe(recipe)}
+                        onClick={() => handleSelectEvent(event)}
                         style={{ marginTop: "10px" }}
                       >
                         View Details
@@ -128,12 +128,12 @@ const RecipeView = () => {
                 </ul>
               )}
 
-              {filteredRecipes.length === 0 && !selectedRecipe && (
-                <p>No recipes found.</p>
+              {filteredEvents.length === 0 && !selectedEvent && (
+                <p>No Events found.</p>
               )}
 
-              {/* Recipe Detail View */}
-              {selectedRecipe && (
+              {/* Event Detail View */}
+              {selectedEvent && (
                 <div
                   style={{
                     border: "1px solid #ddd",
@@ -141,28 +141,28 @@ const RecipeView = () => {
                     padding: "20px",
                   }}
                 >
-                  <h2>{selectedRecipe.name}</h2>
+                  <h2>{selectedEvent.name}</h2>
                   <p>
-                    <strong>Cuisine:</strong> {selectedRecipe.cuisine}
+                    <strong>Cuisine:</strong> {selectedEvent.cuisine}
                   </p>
                   <p>
                     <strong>Ingredients:</strong>{" "}
-                    {selectedRecipe.ingredients.join(", ")}
+                    {selectedEvent.ingredients.join(", ")}
                   </p>
                   <p>
-                    <strong>Instructions:</strong> {selectedRecipe.instructions}
+                    <strong>Instructions:</strong> {selectedEvent.instructions}
                   </p>
                   <p>
-                    <strong>Cooking Time:</strong> {selectedRecipe.cookingTime}
+                    <strong>Cooking Time:</strong> {selectedEvent.cookingTime}
                   </p>
                   <button
-                    onClick={() => setSelectedRecipe(null)}
+                    onClick={() => setSelectedEvent(null)}
                     style={{ marginRight: "10px" }}
                   >
                     Back
                   </button>
                   <button
-                    onClick={() => handleDeleteRecipe(selectedRecipe.id)}
+                    onClick={() => handleDeleteEvent(selectedEvent.id)}
                     style={{ backgroundColor: "red", color: "white" }}
                   >
                     Delete
@@ -186,4 +186,4 @@ const RecipeView = () => {
   );
 };
 
-export default RecipeView;
+export default EventView;

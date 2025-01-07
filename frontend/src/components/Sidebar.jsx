@@ -15,22 +15,16 @@ const Sidebar = ({ isVisible }) => {
         Dashboard
       </NavLink>
       <NavLink
-        to="/list"
+        to="/form"
         className="block p-2 rounded hover:bg-red-600 hover:text-white transition"
       >
-        Recipe Listing
+        Create Event
       </NavLink>
       <NavLink
         to="/view"
         className="block p-2 rounded hover:bg-red-600 hover:text-white transition"
       >
-        Recipe View
-      </NavLink>
-      <NavLink
-        to="/form"
-        className="block p-2 rounded hover:bg-red-600 hover:text-white transition"
-      >
-        Add Recipe
+        View Events
       </NavLink>
       <NavLink
         to="#"
