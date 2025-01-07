@@ -17,7 +17,7 @@ const Home = () => {
         <Sidebar isVisible={isSidebarVisible} />
         <main className="flex-1 p-6 overflow-y-auto">
           <div className="bg-white p-6 rounded shadow animate-fade-in">
-            <h2 className="text-2xl font-bold mb-4">Welcome to {"<"}Foodie{"/>"}</h2>
+            <h2 className="text-2xl font-bold mb-4">Welcome to {"<"}EMS{"/>"}</h2>
             <p className="text-gray-700">
               This is the main content area where you can add your components
               and features.

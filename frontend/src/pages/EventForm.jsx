@@ -2,36 +2,35 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
+import { useAuthStore } from '../store/authUser';
 
-const EventForm = ({ onSubmit, initialData }) => {
-  const [recipe, setRecipe] = useState(
-    initialData || {
-      name: "",
-      cuisine: "",
-      ingredients: "",
-      instructions: "",
-      cookingTime: "",
-    }
-  );
+const EventForm = () => {
+  const [event, setEvent] = useState({
+    title: "",
+    description: "",
+    date: "",
+    location: "",
+    maxAttendees: "",
+    imageUrl: "",
+  });
+
+  const { createEvent, isCreatingEvent } = useAuthStore();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRecipe({ ...recipe, [name]: value });
+    setEvent({ ...event, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formattedRecipe = {
-      ...recipe,
-      ingredients: recipe.ingredients.split(",").map((ing) => ing.trim()),
-    };
-    onSubmit(formattedRecipe);
-    setRecipe({
-      name: "",
-      cuisine: "",
-      ingredients: "",
-      instructions: "",
-      cookingTime: "",
+    await createEvent(event);
+    setEvent({
+      title: "",
+      description: "",
+      date: "",
+      location: "",
+      maxAttendees: "",
+      imageUrl: "",
     });
   };
 
@@ -49,90 +48,91 @@ const EventForm = ({ onSubmit, initialData }) => {
         <main className="flex-1 p-6 overflow-y-auto">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-800">
-                {initialData ? "Edit Recipe" : "Create Event"}
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-800">Create Event</h2>
               <div className="flex flex-col">
-                <label htmlFor="name" className="text-sm font-medium text-gray-600">
-                Title
+                <label htmlFor="title" className="text-sm font-medium text-gray-600">
+                  Title
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
+                  id="title"
+                  name="title"
                   placeholder="Enter event title"
-                  value={recipe.name}
+                  value={event.title}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
+                  required
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="instructions" className="text-sm font-medium text-gray-600">
-                Description
+                <label htmlFor="description" className="text-sm font-medium text-gray-600">
+                  Description
                 </label>
                 <textarea
-                  id="instructions"
-                  name="instructions"
-                  placeholder="Enter Event Description"
-                  value={recipe.instructions}
+                  id="description"
+                  name="description"
+                  placeholder="Enter event description"
+                  value={event.description}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
                   rows="4"
+                  required
                 ></textarea>
               </div>
               <div className="flex flex-col">
-                <label htmlFor="cuisine" className="text-sm font-medium text-gray-600">
+                <label htmlFor="date" className="text-sm font-medium text-gray-600">
                   Date
                 </label>
                 <input
                   type="date"
-                  id="cuisine"
-                  name="cuisine"
-                  placeholder="Enter cuisine type"
-                  value={recipe.cuisine}
+                  id="date"
+                  name="date"
+                  value={event.date}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
+                  required
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="ingredients" className="text-sm font-medium text-gray-600">
-                Location
+                <label htmlFor="location" className="text-sm font-medium text-gray-600">
+                  Location
                 </label>
                 <input
                   type="text"
-                  id="ingredients"
-                  name="ingredients"
-                  placeholder="Enter Location"
-                  value={recipe.ingredients}
+                  id="location"
+                  name="location"
+                  placeholder="Enter event location"
+                  value={event.location}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
+                  required
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="cookingTime" className="text-sm font-medium text-gray-600">
-                Max attendees
+                <label htmlFor="maxAttendees" className="text-sm font-medium text-gray-600">
+                  Max Attendees
                 </label>
                 <input
-                  type="text"
-                  id="cookingTime"
-                  name="cookingTime"
+                  type="number"
+                  id="maxAttendees"
+                  name="maxAttendees"
                   placeholder="Enter max attendees"
-                  value={recipe.cookingTime}
+                  value={event.maxAttendees}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
+                  required
                 />
               </div>
-
               <div className="flex flex-col">
-                <label htmlFor="cookingTime" className="text-sm font-medium text-gray-600">
-                Image URL
+                <label htmlFor="imageUrl" className="text-sm font-medium text-gray-600">
+                  Image URL
                 </label>
                 <input
                   type="text"
-                  id="cookingTime"
-                  name="cookingTime"
-                  placeholder="Enter image url"
-                  value={recipe.cookingTime}
+                  id="imageUrl"
+                  name="imageUrl"
+                  placeholder="Enter image URL"
+                  value={event.imageUrl}
                   onChange={handleChange}
                   className="border rounded-md p-3 mt-1 focus:outline-none focus:ring focus:ring-green-300"
                 />
@@ -140,8 +140,9 @@ const EventForm = ({ onSubmit, initialData }) => {
               <button
                 type="submit"
                 className="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-600 transition-all"
+                disabled={isCreatingEvent}
               >
-                {initialData ? "Update Recipe" : "Create Event"}
+                {isCreatingEvent ? "Creating Event..." : "Create Event"}
               </button>
             </form>
           </div>

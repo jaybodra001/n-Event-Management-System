@@ -1,6 +1,6 @@
 import "./index.css";
 import Home from "./pages/Home";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import EventView from "./pages/EventView";
 import EventForm from "./pages/EventForm";
 import Login from "./pages/Login";
@@ -20,11 +20,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/view" element={<EventView />} />
-        <Route path="/form" element={<EventForm />} />
+        <Route path="/" element={user ? <Home /> : <Navigate to ={"/login"} />} />
+        <Route path="/login" element={!user ? <Login /> : <Navigate to ={"/"} />} />
+        <Route path="/register" element={!user ? <Register /> : <Navigate to ={"/"} />} />
+        <Route path="/view" element={user ? <EventView /> : <Navigate to ={"/login"} />} />
+        <Route path="/form"element={user ? <EventForm /> : <Navigate to ={"/login"} />} />
       </Routes>
       <Toaster />
     </Router>
