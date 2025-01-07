@@ -28,9 +28,9 @@ const Sidebar = ({ isVisible }) => {
       >
         View Events
       </NavLink>
+      
       <a
-        to="#"
-        className="block p-2 rounded hover:bg-red-600 hover:text-white transition"
+        className="block p-2 rounded cursor-pointer hover:bg-red-600 hover:text-white transition"
         onClick={logout}
       >
         Logout
