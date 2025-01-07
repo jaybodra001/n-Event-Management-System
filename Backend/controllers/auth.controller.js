@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js"
+import {Event} from "../models/event.model.js";
 import bcryptjs from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateToken.js"
 
@@ -75,7 +76,7 @@ export async function login(req,res) {
 export async function logout(req,res) {
     
     try{
-        res.clearCookie("jwt-tasks")
+        res.clearCookie("jwt-event")
         res.status(200).json({success:true,message:"Logged out successfully!!!"})
     }catch(e){
         console.log("Error in Logout controller:"+e.message)
@@ -94,95 +95,87 @@ export async function authCheck(req, res) {
 }
 
 
-export async function updateProfile(req, res) {
+export async function createEvent(req, res) {
     try {
-        const { name, email } = req.body;
-
-        // Validate inputs
-        if (!name || !email) {
-            return res.status(400).json({
-                success: false,
-                message: "Name and email are required!"
-            });
-        }
-
-        // Check if the email already exists in the database (excluding the current user's email)
-        const existingUser = await User.findOne({ email });
-        if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
-            return res.status(400).json({
-                success: false,
-                message: "Email is already taken by another user!"
-            });
-        }
-
-        // Update the user profile
-        const updatedUser = await User.findByIdAndUpdate(
-            req.user._id, 
-            { $set: { name, email } },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedUser) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found!"
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Profile updated successfully!",
-            user: updatedUser
-        });
-    } catch (e) {
-        console.error("Error in updateProfile controller:", e.message);
-        res.status(500).json({
-            success: false,
-            message: "Internal server error!"
-        });
-    }
-}
-
-export async function changePassword(req, res) {
-    try {
-      const { oldPassword, newPassword, confirmPassword } = req.body;
-
-      // Find the user
-      const user = await User.findById(req.user._id);
-      if (!user) {
-        return res.status(404).json({
-          success: false,
-          message: "User not found!"
-        });
+      const { title, description, date, location, maxAttendees, imageUrl } = req.body;
+  
+      if (!title || !description || !date || !location || !maxAttendees || !imageUrl) {
+        return res.status(400).json({ success: false, message: "All fields are required!" });
       }
   
-      // Check if the old password matches
-      const isMatch = await bcryptjs.compare(oldPassword, user.password);
-      if (!isMatch) {
-        return res.status(400).json({
-          success: false,
-          message: "Old password is incorrect!"
-        });
+      if (maxAttendees <= 0) {
+        return res.status(400).json({ success: false, message: "Max attendees must be greater than 0!" });
       }
   
-      // Hash the new password
-      const salt = await bcryptjs.genSalt(10);
-      const hashedPassword = await bcryptjs.hash(newPassword, salt);
-  
-      // Update the password
-      user.password = hashedPassword;
-      await user.save();
-  
-      res.status(200).json({
-        success: true,
-        message: "Password changed successfully!"
-      })
-    } catch (e) {
-      console.error("Error in changePassword controller:", e.message);
-      res.status(500).json({
-        success: false,
-        message: "Internal server error!"
+      const newEvent = new Event({
+        title,
+        description,
+        date,
+        location,
+        maxAttendees,
+        imageUrl,
+        owner: req.user._id, 
       });
+  
+      await newEvent.save();
+  
+      res.status(201).json({ success: true, message: "Event created successfully!", event: newEvent });
+    } catch (error) {
+      console.log("Error in addEvent controller:", error.message);
+      res.status(500).json({ success: false, message: "Internal server error!" });
+    }
+  }
+
+export async function updateEvent(req, res) {
+    try {
+      const { id } = req.params; 
+      const { title, description, date, location, maxAttendees, imageUrl } = req.body;
+  
+      const event = await Event.findById(id);
+  
+      if (!event) {
+        return res.status(404).json({ success: false, message: "Event not found!" });
+      }
+  
+      if (event.owner.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ success: false, message: "You are not authorized to update this event!" });
+      }
+  
+      event.title = title || event.title;
+      event.description = description || event.description;
+      event.date = date || event.date;
+      event.location = location || event.location;
+      event.maxAttendees = maxAttendees || event.maxAttendees;
+      event.imageUrl = imageUrl || event.imageUrl;
+  
+      await event.save();
+  
+      res.status(200).json({ success: true, message: "Event updated successfully!", event });
+    } catch (error) {
+      console.log("Error in updateEvent controller:", error.message);
+      res.status(500).json({ success: false, message: "Internal server error!" });
     }
   }
   
+  export async function deleteEvent(req, res) {
+    try {
+      const { id } = req.params; 
+  
+      const event = await Event.findById(id);
+  
+      if (!event) {
+        return res.status(404).json({ success: false, message: "Event not found!" });
+      }
+  
+      if (event.owner.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ success: false, message: "You are not authorized to delete this event!" });
+      }
+  
+      await event.deleteOne();
+  
+      res.status(200).json({ success: true, message: "Event deleted successfully!" });
+    } catch (error) {
+      console.log("Error in deleteEvent controller:", error.message);
+      res.status(500).json({ success: false, message: "Internal server error!" });
+    }
+  }

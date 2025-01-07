@@ -1,5 +1,5 @@
 import express from 'express'
-import { authCheck, changePassword, signup, updateProfile } from '../controllers/auth.controller.js'
+import { authCheck, createEvent, deleteEvent, signup, updateEvent } from '../controllers/auth.controller.js'
 import { login } from '../controllers/auth.controller.js'
 import { logout } from '../controllers/auth.controller.js'
 import { protectRoute } from '../middleware/protectRoute.js'
@@ -11,9 +11,9 @@ router.post("/signup", signup)
 router.post("/login", login)    
 router.post("/logout", logout)
 
-router.put("/update-profile", protectRoute, updateProfile);
-
-router.put("/change-password", protectRoute, changePassword);
+router.post("/events", protectRoute, createEvent)
+router.put("/events/:id", protectRoute, updateEvent)
+router.delete("/events/:id", protectRoute, deleteEvent)
 
 router.get("/authCheck", protectRoute, authCheck)
 
